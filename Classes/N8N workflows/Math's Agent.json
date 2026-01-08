@@ -1,0 +1,139 @@
+{
+  "name": "math's Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "71980fa9-569d-42a7-8484-d794b02c22d6",
+      "name": "When chat message received",
+      "webhookId": "a04af0f9-a941-43b2-b99b-3a2c7f9aee81"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a Calculator ai agent connected to a calculator\nTask:\n- understand numerical and athematical requests\n- Use the Calculator tool for all calculations\n- Do not perform math mentally or guess results\n\nRules:\n- Always call the calculator tool\n- return clear, accurate results\n- Explain steps briefly on if requested\n- ask for clarification if the input in unclear"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "24bc0069-e9d2-4366-9367-d4d8264c102e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        208
+      ],
+      "id": "e7568e09-a7ae-45d0-b63f-3bf9499ef01b",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "2mIaPdcD5y70VufB",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "9044fab8-5e90-443d-906d-f846cb172359",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        368,
+        208
+      ],
+      "id": "e6e7395f-0baa-4cf7-9973-ae00ca275a51",
+      "name": "Calculator"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "89cabff6-03fc-40d7-bd2f-cc4b7ab1fb77",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d3240afeb13c4357b9ebc3f9224b662e3e03c337390ea36971e512979750f691"
+  },
+  "id": "dBx1u0f20CWpxrun",
+  "tags": []
+}

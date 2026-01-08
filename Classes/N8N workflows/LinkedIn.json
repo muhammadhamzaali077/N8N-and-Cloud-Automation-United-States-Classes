@@ -1,0 +1,313 @@
+{
+  "name": "My workflow 9",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 17
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dcd946fa-a63a-440e-8c80-214b2b83f519",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Your are a researcher agent.\nMust use Tavily tool for research for maximum 5 searches\ngenerate content topic idea only (no full posts) around:\n- ai content, agentic AI\n- Linkedin growth and automation\n- solopreneur productivity with AI\n- system for scaling personal brands\nOutput\n- topic Title\n- why it matter (1-2 lines)\n- Linkedin-style hook\nRule\n- do not Use Tavily tool after 3 calls this is maximum limit",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        288,
+        0
+      ],
+      "id": "4b4ce5b0-2b89-4d94-a0a9-8c173c339a2a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "maxRetries": 10
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        224
+      ],
+      "id": "67ceb392-3ec9-4735-93f2-ce8849f36ca4",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "2mIaPdcD5y70VufB",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', ``, 'string') }}",
+        "options": {
+          "max_results": 5
+        }
+      },
+      "type": "@tavily/n8n-nodes-tavily.tavilyTool",
+      "typeVersion": 1,
+      "position": [
+        352,
+        224
+      ],
+      "id": "a6dcacfb-ad14-4d51-a146-06e55f49ab4d",
+      "name": "Search in Tavily",
+      "credentials": {
+        "tavilyApi": {
+          "id": "KN47yuITz2uYkDbM",
+          "name": "Tavily account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"title\" : \"string\",\n  \"why_it_matters\" : \"string\",\n  \"linkedin_hook\" : \"string\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        224
+      ],
+      "id": "c0379c8c-1039-486d-8437-a19fe1ec2efa",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Linkedin Content creator and copywriter agent. Given Title  {{ $json.output.title }}, the reason why it matters {{ $json.output.why_it_matters }} and suggested hook for post  {{ $json.output.linkedin_hook }} generate the content for linkedin post \nAlso Describe a suitable prompt for image to generate",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        688,
+        0
+      ],
+      "id": "c0b97e66-b297-493e-a44e-b3642c1a7755",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        704,
+        224
+      ],
+      "id": "16cace21-6138-4b7f-910d-53a8f8f229e9",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "2mIaPdcD5y70VufB",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"post_title\" : \"string\",\n  \"post_content\" : \"string\",\n  \"Image_prompt\" : \"string\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        832,
+        224
+      ],
+      "id": "a267c6ef-92fb-4f29-959a-1ad25eb92575",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json.output.Image_prompt }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "4b7da5b6-6a16-4533-96ac-eea02c3089f2",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": "2mIaPdcD5y70VufB",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "person": "iG3Gh9IrbM",
+        "text": "={{ $('AI Agent1').item.json.output.post_title }}\n\n{{ $('AI Agent1').item.json.output.post_content }}",
+        "shareMediaCategory": "IMAGE",
+        "binaryPropertyName": "={{ $('Generate an image').item.binary.data }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        0
+      ],
+      "id": "07046930-41d4-4caf-8572-487fbc9ec8b0",
+      "name": "Create a post",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "Ao9TRHUEmFVn4Pey",
+          "name": "LinkedIn account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search in Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dc3f4234-e2be-4ea9-9082-ceca8479d2ba",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d3240afeb13c4357b9ebc3f9224b662e3e03c337390ea36971e512979750f691"
+  },
+  "id": "MnGxZ4OKYSHBbotr",
+  "tags": []
+}

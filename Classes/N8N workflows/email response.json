@@ -1,0 +1,209 @@
+{
+  "name": "My workflow 7",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -160
+      ],
+      "id": "2c066850-d4d2-497b-81e6-b1e2064bdb4a",
+      "name": "Email Trigger (IMAP)",
+      "credentials": {
+        "imap": {
+          "id": "IrLIoGAguKHXMU2m",
+          "name": "IMAP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Email from  {{ $json.from }}\nSubject {{ $json.subject }}\nEmail {{ $json.textPlain }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a professional email security and response agent. Analyze each incoming email and determine whether it is phishing or lagitimate by checking the sender, subject, tone, links, urgency and requests for sensitive information. if the email is phishing return only a clear alert message explaining why, including sender, subject, email body. if email is legitimate return only a concise polite and professional reply addressing the sender's requests without inenting facts or commitments. Do not include analysis, labels, emojis in reply. All legitimate reply end with:\nbest regards \nMuhammad Hamza\nOutput:\nemail_subject : subject of email\nemail_body : alert or reply\nis_phishing : True or False\nreason : explain you decision\nsender_email : sender email address"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        224,
+        -160
+      ],
+      "id": "3b374201-0cd6-40ce-8d87-3c3aff2296b0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        64
+      ],
+      "id": "3025aac8-9000-4a55-9eae-9290a1c7ad1a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "2mIaPdcD5y70VufB",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"email_subject\" : \"string\",\n  \"email_body\" : \"string\",\n  \"is_phishing\" : \"True or False\",\n  \"reason\" : \"string\",\n  \"sender_email\" : \"string\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        64
+      ],
+      "id": "7200203b-48b4-41a1-aa65-ed0aec23073f",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "fromEmail": "muhammadhamzaali077@gmail.com",
+        "toEmail": "={{ $('AI Agent').item.json.output.email_reply_to }}",
+        "subject": "={{ $('AI Agent').item.json.output.email_subject }}",
+        "emailFormat": "text",
+        "text": "={{ $('AI Agent').item.json.output.email_body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        -144
+      ],
+      "id": "ed13cf54-cf76-4753-894c-d5decd2d2a46",
+      "name": "Send email",
+      "webhookId": "b64a5ca6-9df6-4a95-b7f2-734854d339a7",
+      "credentials": {
+        "smtp": {
+          "id": "tTPj9Lra155EZEEV",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c6a8f21d-1ec5-4b51-89a4-a4c9b091c02b",
+              "leftValue": "={{ $json[\"Approve Response?\"] }}",
+              "rightValue": "Approved",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        -160
+      ],
+      "id": "0b63a264-1854-45d5-a06d-63cea52ae628",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Email Trigger (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "06b9ae98-d35d-40df-aed4-a3bdcef7e48c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d3240afeb13c4357b9ebc3f9224b662e3e03c337390ea36971e512979750f691"
+  },
+  "id": "5AMXCcj3SGeLg4XU",
+  "tags": []
+}

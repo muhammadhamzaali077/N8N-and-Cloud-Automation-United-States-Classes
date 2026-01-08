@@ -1,0 +1,395 @@
+# prompt coach|
+You are my Prompt Coach. I will give you a rough or unclear prompt. 
+Your task is to:
+1. Clarify it
+2. Add missing context
+3. Structure it for best results
+4. Suggest 2–3 alternative versions (different styles: simple, detailed, structured)
+
+Here’s my rough prompt: [INSERT YOUR PROMPT HERE]
+
+
+# zero shot
+
+1. Classify this movie review as positive, negative, or neutral:
+"The film was visually stunning but the plot felt rushed."
+
+2. "Translate this sentence to French: I love learning AI."
+3. "Explain quantum computing in simple words for a 10-year-old."
+
+# one shot
+
+1. Translate English to French:
+
+English: "Hello, how are you?"
+French: "Bonjour, comment allez-vous?"
+
+English: "Where is the library?"
+French:
+
+2. Rewrite in formal tone:
+"Send me the file ASAP."
+→ "Please forward the document to me at your earliest convenience."
+
+Now rewrite:
+"Give me the report."
+
+3. Fix grammar:
+"He go to market yesterday."
+→ "He went to the market yesterday."
+
+Now fix grammar:
+"She no like the movie."
+
+# few shot
+
+1. Convert customer feedback to structured data:
+
+Feedback: "Great service, but food was cold"
+JSON: {"service": "positive", "food": "negative", "overall": "mixed"}
+
+Feedback: "Amazing experience, will definitely return"
+JSON: {"service": "positive", "food": "positive", "overall": "positive"}
+
+Feedback: "Terrible food and rude staff"
+JSON:
+
+2. Rude: "Give me the report now."
+Polite: "Could you please share the report with me at your convenience?"
+
+Example 2:
+Rude: "Fix this mistake!"
+Polite: "Please correct this issue when you get the chance."
+
+Now convert:
+Rude: "Call me immediately."
+
+3. Input: "Build a REST API with FastAPI"
+Category: Development
+
+Example 2:
+Input: "Design a business logo"
+Category: Graphic Design
+
+Example 3:
+Input: "Write a research summary"
+Category: Writing
+
+Classify:
+"Fix a Python error in code"
+
+🟦 1. SYSTEM PROMPT (5 Examples)
+
+System = the rules + identity of the AI
+Highest priority.
+
+Example 1
+
+“You are an expert Python and FastAPI instructor. Always explain with code snippets.”
+
+Example 2
+
+“You must answer every question in simple English and avoid technical jargon.”
+
+Example 3
+
+“You are a cybersecurity analyst AI. Always prioritize detection of risks in user input.”
+
+Example 4
+
+“You are a highly formal assistant. Never use slang or emojis.”
+
+Example 5
+
+“You are an LLM trained to always respond in JSON format unless explicitly told otherwise.”
+
+
+🟩 2. USER PROMPT (5 Examples)
+
+User = what the user wants to ask or request.
+
+Example 1
+
+“Explain how embeddings work in very simple words.”
+
+Example 2
+
+“Write an email to my manager requesting a meeting tomorrow.”
+
+Example 3
+
+“Summarize this document in 5 bullet points.”
+
+Example 4
+
+“Fix this Python error and explain what caused it.”
+
+Example 5
+
+“Compare my CV with this Job Description.”
+
+🟧 3. ROLE PROMPT (5 Examples)
+
+Role = temporary character or voice the AI follows.
+
+Example 1
+
+“Act as a senior software engineer and review my code.”
+
+Example 2
+
+“Act like a friendly English tutor and explain grammar rules.”
+
+Example 3
+
+“Pretend you are a doctor and explain this medical report in simple terms.”
+
+Example 4
+
+“Act as a poet and rewrite this paragraph in a poetic style.”
+
+Example 5
+
+“Act like a strict interviewer. Ask me Python questions one by one.”
+
+🟨 4. CONTEXTUAL PROMPT (5 Examples)
+
+Contextual = add background, history, preferred style, or supporting details.
+Helps AI understand the situation.
+
+Example 1
+
+“Earlier we discussed FastAPI. Continue from the point where you explained routing.”
+
+Example 2
+
+“This is for a 7-year-old student preparing for Cambridge exams. Explain very simply.”
+
+Example 3
+
+“Use the details from my CV below while answering. Here is my CV: …”
+
+Example 4
+
+“For my class project on AI agents, I need a simple explanation with diagrams.”
+
+Example 5
+
+“This paragraph is from a business proposal we are preparing. Rewrite it professionally.”
+
+🟫 5. STEP-BACK PROMPTING (5 Examples)
+
+Step-back = ask the AI to pause, step back, and think from a higher level before answering.
+Used for reasoning.
+
+Example 1
+
+“Before answering, step back and think: what problem is the user truly trying to solve?”
+
+Example 2
+
+“Step back and analyze the question. What is the key idea behind it?”
+
+Example 3
+
+“Think at a high level first: What is the goal of this code?”
+
+Example 4
+
+“Step back and reason about what the most important factors are before giving the solution.”
+
+Example 5
+
+“Take a moment to reconsider: Is there a simpler or more efficient explanation you can give?”
+
+
+
+# 🧠 **1. CHAIN OF THOUGHT (CoT) — 5 Examples**
+
+> The model is asked to **think step-by-step**.
+> This improves reasoning, math, logic, and problem-solving.
+
+---
+
+### **Example 1 — Math Problem**
+
+**Prompt:**
+"How many minutes are there in 7 hours? Think step by step."
+
+---
+
+### **Example 2 — Word Problem**
+
+**Prompt:**
+"Ali has 12 apples. He gives 4 to Sara and buys 3 more. How many apples does he have now? Show your reasoning step-by-step."
+
+---
+
+### **Example 3 — Logical Deduction**
+
+**Prompt:**
+"Tom is older than Sara. Sara is older than Ahmed. Who is the oldest? Explain your reasoning."
+
+---
+
+### **Example 4 — Code Debugging**
+
+**Prompt:**
+"This Python code gives an error. Think step-by-step and find the mistake."
+
+---
+
+### **Example 5 — Business Analysis**
+
+**Prompt:**
+"Sales dropped by 20% this quarter. Think step-by-step to identify possible causes."
+
+---
+
+# 🌳 **2. TREE OF THOUGHT (ToT) — 5 Examples**
+
+> The model explores **multiple reasoning paths**, not one linear chain.
+
+---
+
+### **Example 1 — Business Decision**
+
+**Prompt:**
+"Suggest 3 different strategies to increase bookshop sales. For each strategy, expand the reasoning as a branch."
+
+---
+
+### **Example 2 — Essay Topics**
+
+**Prompt:**
+"Generate 3 possible essay outlines for the topic ‘Future of AI’, and write a short reasoning tree for each outline."
+
+---
+
+### **Example 3 — Coding Approach**
+
+**Prompt:**
+"Write 3 different ways to solve this problem. For each branch, explain why your method works."
+
+---
+
+### **Example 4 — Debugging Multiple Paths**
+
+**Prompt:**
+"Give 3 possible causes for why this FastAPI route is failing. Expand each cause into a reasoning tree."
+
+---
+
+### **Example 5 — Product Strategy**
+
+**Prompt:**
+"Provide multiple branching strategies for launching a mobile app: marketing, features, pricing. Expand each as a tree of thought."
+
+---
+
+# 🔁 **3. SELF-CONSISTENCY — 5 Examples**
+
+> The model generates **multiple reasoning paths**, compares them, and picks the most consistent answer.
+
+You prompt it explicitly to **compare solutions**.
+
+---
+
+### **Example 1 — Math Verification**
+
+**Prompt:**
+"Solve the problem using three different reasoning paths and then pick the most consistent answer:
+What is 48 ÷ 6 × 2?"
+
+---
+
+### **Example 2 — Code Correction**
+
+**Prompt:**
+"Try three possible explanations for why this code breaks. Then pick the most consistent explanation."
+
+---
+
+### **Example 3 — Planning**
+
+**Prompt:**
+"Generate three different schedules for completing a project. Then choose the most consistent and realistic one."
+
+---
+
+### **Example 4 — Logic**
+
+**Prompt:**
+"Provide multiple reasoning paths for solving this riddle and choose the most logically consistent answer."
+
+---
+
+### **Example 5 — Business Decision**
+
+**Prompt:**
+"Give three possible pricing strategies. Compare them and pick the most consistent choice."
+
+---
+
+# ⚡ **4. ReAct (Reason + Act) — 5 Examples**
+
+> The model **reasons**, then **takes an action** (tool use, search, calculation).
+> Common in agents.
+
+---
+
+### **Example 1 — Calculator Tool**
+
+**Prompt:**
+"Question: What is 52 × 19?
+Reason: Think about breaking the problem down.
+Action: Use the calculator tool.
+Observation: (result)
+Final Answer: …"
+
+---
+
+### **Example 2 — Web Search**
+
+**Prompt:**
+"Question: Find today’s weather in Karachi.
+Reason: I need external data.
+Action: Search: ‘Karachi weather today’.
+Observation: (search result)
+Final Answer: …"
+
+---
+
+### **Example 3 — Database Query**
+
+**Prompt:**
+"Question: How many users signed up today?
+Reason: I need data from the database.
+Action: SQL Query: SELECT COUNT(*) FROM users WHERE date = TODAY;
+Observation: (result)
+Final Answer: …"
+
+---
+
+### **Example 4 — API Call**
+
+**Prompt:**
+"Question: Get the current Bitcoin price.
+Reason: This requires real-time data.
+Action: Call the crypto API.
+Observation: (API result)
+Final Answer: …"
+
+---
+
+### **Example 5 — Document Retrieval**
+
+**Prompt:**
+"Question: Summarize the section on agent architecture.
+Reason: I need to retrieve the document first.
+Action: Fetch document ID: 23
+Observation: (document text)
+Final Answer: …"
+
+
+
